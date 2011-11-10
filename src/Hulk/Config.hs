@@ -23,11 +23,17 @@ getConfig conf = do
         users <- get c "USERS" "data_dir"
         logs <- get c "LOGS" "event_log"
         chans <- fmap words $ get c "LOGS" "channels"
+        let ldap_host = either (const Nothing) Just $ get c "AUTH" "ldap_host"
+        let ldap_port = either (const Nothing) Just $ get c "AUTH" "ldap_port"
+        let ldap_dn = either (const Nothing) Just $ get c "AUTH" "ldap_dn"
         return Config { configListen = fromIntegral (listen::Word16)
                       , configMotd = Just motd 
                       , configHostname = hostname
                       , configPasswd = passwd
                       , configPasswdKey = key
+                      , configLdapHost = ldap_host
+                      , configLdapPort = ldap_port
+                      , configLdapDn = ldap_dn
                       , configPreface = Just preface
                       , configUserData = users
                       , configLogFile = logs

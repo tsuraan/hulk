@@ -24,6 +24,9 @@ data Config = Config {
     , configPreface :: Maybe FilePath
     , configPasswd :: FilePath
     , configPasswdKey :: FilePath
+    , configLdapHost :: Maybe String
+    , configLdapPort :: Maybe Int
+    , configLdapDn :: Maybe String
     , configUserData :: FilePath
     , configLogFile :: FilePath
     , configLogChans :: [String]
@@ -198,6 +201,7 @@ class Monad m => MonadProvider m where
   provideUser      :: String -> m UserData
   provideLogger    :: String -> RPL -> [String] -> m ()
   provideLog       :: m [(DateTime,String,RPL,[String])]
+  provideLdapAuth  :: String -> String -> m Bool
 
 newtype HulkIO a = HulkIO { runHulkIO :: ReaderT Config IO a }
  deriving (Monad,MonadReader Config,Functor,MonadIO)

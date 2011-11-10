@@ -18,7 +18,7 @@ Executable hulk
                      Data.String,
                      Hulk.Auth, Hulk.Client, Hulk.Concurrent, Hulk.Config,
                      Hulk.Event, Hulk.Log, Hulk.Options, Hulk.Providers,
-                     Hulk.Server, Hulk.Types
+                     Hulk.Server, Hulk.Types, Hulk.Ldap
   Ghc-options:       -threaded
   Hs-Source-Dirs:    src
   Build-depends:     base >= 4 && <5
@@ -36,9 +36,11 @@ Executable hulk
                     ,json >= 0.4 && < 0.5
                     ,old-locale >= 1.0 && <1.1
                     ,old-time >= 1.0 && <1.1
-                    ,directory >= 1.0 && < 1.1
+                    ,directory >= 1.0 && < 1.2
                     ,filepath >= 1.1 && < 1.2
                     ,strict >= 0.3 && < 0.4
+                    ,LDAP >= 0.6 && < 0.7
+                    ,MissingH
 
 Executable hulk-generate-pass
   Main-is:          GeneratePass.hs

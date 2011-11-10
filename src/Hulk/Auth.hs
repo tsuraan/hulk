@@ -19,7 +19,9 @@ authenticate :: MonadProvider m => String -> String -> m Bool
 authenticate user pass = do
   key <- filter keyChars `liftM` provideKey
   passwds <- liftM getPasswds $ providePasswords
-  return $ any (== (user,sha1 key pass)) passwds
+  if any (== (user,sha1 key pass)) passwds
+    then return True
+    else provideLdapAuth user pass
   where getPasswds = map readPair . lines
             where readPair = second (drop 1) . span (/=' ')
         keyChars c = elem c ['a'..'z'] || isDigit c

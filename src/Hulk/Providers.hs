@@ -1,6 +1,7 @@
 {-# OPTIONS -Wall -fno-warn-name-shadowing -fno-warn-orphans #-}
 module Hulk.Providers where
 
+import Data.List.Utils ( replace )
 import Control.Applicative
 import Control.Monad.Reader
 import Data.Char
@@ -15,6 +16,7 @@ import System.IO.Strict (readFile)
 import Text.JSON as JSON
 
 import Hulk.Types
+import Hulk.Ldap
 
 instance MonadProvider HulkIO where
   providePreface = maybeReadFile configPreface
@@ -52,6 +54,18 @@ instance MonadProvider HulkIO where
              case decode line of
                Ok event -> Just event
                _ -> Nothing
+
+  provideLdapAuth user pass = do
+    mHost <- asks configLdapHost
+    mPort <- asks configLdapPort
+    mDn   <- asks configLdapDn
+
+    case (mHost, mPort, mDn) of
+      (Just host, Just port, Just dn) -> do
+        let dn' = replace "%s" user dn
+        liftIO $ authenticate host port dn' pass
+      _ ->
+        return False
 
 normalizeUser :: [Char] -> [Char]
 normalizeUser = filter (\c -> isDigit c || isLetter c)
